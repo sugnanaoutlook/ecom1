@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Order Confirmed - ShopEasy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container nav-container">
+        <a href="/" class="navbar-brand">ShopEasy</a>
+        <div class="nav-links">
+            <a href="/products" class="nav-link">Products</a>
+            <a href="/cart" class="nav-link">&#128722; Cart</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top: 4rem; text-align: center;">
+    <div class="success-card">
+        <div class="success-icon">&#9989;</div>
+        <h1>Order Placed Successfully!</h1>
+        <p th:if="${orderId}">
+            Your order <strong th:text="'#' + ${orderId}">ID</strong> has been confirmed.
+        </p>
+        <p>Thank you for shopping with ShopEasy! You will receive a confirmation email shortly.</p>
+        <div style="margin-top: 2rem;">
+            <a href="/products" class="btn btn-primary btn-lg">Continue Shopping</a>
+            <a href="/" class="btn btn-outline btn-lg" style="margin-left: 1rem;">Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<footer class="footer" style="margin-top: 4rem;">
+    <div class="container">
+        <p>&copy; 2024 ShopEasy. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

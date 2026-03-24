@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Products - ShopEasy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container nav-container">
+        <a href="/" class="navbar-brand">ShopEasy</a>
+        <form class="search-form" action="/search" method="get">
+            <input type="text" name="q" th:value="${keyword}" placeholder="Search products..." class="search-input"/>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div class="nav-links">
+            <a href="/products" class="nav-link">Products</a>
+            <a href="/cart" class="nav-link">&#128722; Cart</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top: 2rem;">
+    <div class="page-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Categories</h3>
+            <ul class="category-list">
+                <li><a href="/products" th:classappend="${selectedCategory == null} ? 'active'">All Products</a></li>
+                <li th:each="cat : ${categories}">
+                    <a th:href="@{/products(category=${cat})}"
+                       th:text="${cat}"
+                       th:classappend="${selectedCategory == cat} ? 'active'">Category</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Product List -->
+        <main class="main-content">
+            <div class="list-header">
+                <h2 th:if="${keyword}" th:text="'Results for: ' + ${keyword}">Search Results</h2>
+                <h2 th:if="${selectedCategory}" th:text="${selectedCategory}">Category</h2>
+                <h2 th:if="${keyword == null and selectedCategory == null}">All Products</h2>
+                <span class="product-count" th:text="${products.size()} + ' products'">0 products</span>
+            </div>
+
+            <div th:if="${products.isEmpty()}" class="empty-state">
+                <p>No products found.</p>
+                <a href="/products" class="btn btn-primary">View All Products</a>
+            </div>
+
+            <div class="product-grid" th:unless="${products.isEmpty()}">
+                <div th:each="product : ${products}" class="product-card">
+                    <div class="product-image-placeholder">
+                        <span th:text="${product.name.substring(0,1)}">P</span>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-category" th:text="${product.category}">Category</span>
+                        <h3 class="product-name">
+                            <a th:href="@{/products/{id}(id=${product.id})}"
+                               th:text="${product.name}">Product Name</a>
+                        </h3>
+                        <p class="product-desc" th:text="${#strings.abbreviate(product.description, 80)}">Desc</p>
+                        <div class="product-footer">
+                            <span class="product-price" th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">$0.00</span>
+                            <div class="product-actions">
+                                <span th:if="${product.stock == 0}" class="out-of-stock">Out of Stock</span>
+                                <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 ShopEasy. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

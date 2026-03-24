@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ShopEasy - Your Online Store</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="container nav-container">
+        <a href="/" class="navbar-brand">ShopEasy</a>
+        <form class="search-form" action="/search" method="get">
+            <input type="text" name="q" placeholder="Search products..." class="search-input"/>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div class="nav-links">
+            <a href="/products" class="nav-link">Products</a>
+            <a href="/cart" class="nav-link">&#128722; Cart</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to ShopEasy</h1>
+        <p>Discover amazing products at unbeatable prices</p>
+        <a href="/products" class="btn btn-hero">Shop Now</a>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Browse Categories</h2>
+        <div class="category-grid">
+            <a th:each="cat : ${categories}"
+               th:href="@{/products(category=${cat})}"
+               class="category-card">
+                <span th:text="${cat}">Category</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section bg-light">
+    <div class="container">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="product-grid">
+            <div th:each="product : ${featuredProducts}" class="product-card">
+                <div class="product-image-placeholder">
+                    <span th:text="${product.name.substring(0,1)}">P</span>
+                </div>
+                <div class="product-info">
+                    <span class="product-category" th:text="${product.category}">Category</span>
+                    <h3 class="product-name">
+                        <a th:href="@{/products/{id}(id=${product.id})}"
+                           th:text="${product.name}">Product Name</a>
+                    </h3>
+                    <p class="product-desc" th:text="${#strings.abbreviate(product.description, 80)}">Desc</p>
+                    <div class="product-footer">
+                        <span class="product-price" th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">$0.00</span>
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center" style="margin-top:2rem;">
+            <a href="/products" class="btn btn-outline">View All Products</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 ShopEasy. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Your Cart - ShopEasy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container nav-container">
+        <a href="/" class="navbar-brand">ShopEasy</a>
+        <form class="search-form" action="/search" method="get">
+            <input type="text" name="q" placeholder="Search products..." class="search-input"/>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div class="nav-links">
+            <a href="/products" class="nav-link">Products</a>
+            <a href="/cart" class="nav-link">&#128722; Cart</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top: 2rem;">
+    <h1>Shopping Cart</h1>
+
+    <div th:if="${cartItems.isEmpty()}" class="empty-state">
+        <div class="empty-cart-icon">&#128722;</div>
+        <p>Your cart is empty.</p>
+        <a href="/products" class="btn btn-primary">Continue Shopping</a>
+    </div>
+
+    <div th:unless="${cartItems.isEmpty()}" class="cart-layout">
+        <!-- Cart Items -->
+        <div class="cart-items">
+            <table class="cart-table">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cartItems}">
+                    <td>
+                        <div class="cart-product">
+                            <div class="cart-product-img">
+                                <span th:text="${item.product.name.substring(0,1)}">P</span>
+                            </div>
+                            <div>
+                                <a th:href="@{/products/{id}(id=${item.product.id})}"
+                                   th:text="${item.product.name}"
+                                   class="cart-product-name">Name</a>
+                                <span class="product-category" th:text="${item.product.category}">Category</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(item.product.price, 1, 2)}">$0.00</td>
+                    <td>
+                        <form th:action="@{/cart/update}" method="post" class="inline-form">
+                            <input type="hidden" name="productId" th:value="${item.product.id}"/>
+                            <input type="number" name="quantity" th:value="${item.quantity}"
+                                   min="1" max="99" class="quantity-input-sm"
+                                   onchange="this.form.submit()"/>
+                        </form>
+                    </td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">$0.00</td>
+                    <td>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="productId" th:value="${item.product.id}"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+                <span>Items (<span th:text="${totalItems}">0</span>):</span>
+                <span th:text="'$' + ${#numbers.formatDecimal(totalPrice, 1, 2)}">$0.00</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping:</span>
+                <span class="free-shipping">FREE</span>
+            </div>
+            <hr/>
+            <div class="summary-total">
+                <span>Total:</span>
+                <span th:text="'$' + ${#numbers.formatDecimal(totalPrice, 1, 2)}">$0.00</span>
+            </div>
+            <a href="/checkout" class="btn btn-primary btn-full">Proceed to Checkout</a>
+            <a href="/products" class="btn btn-outline btn-full" style="margin-top:0.5rem;">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 ShopEasy. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

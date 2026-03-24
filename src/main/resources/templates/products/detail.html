@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${product.name} + ' - ShopEasy'">Product - ShopEasy</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container nav-container">
+        <a href="/" class="navbar-brand">ShopEasy</a>
+        <form class="search-form" action="/search" method="get">
+            <input type="text" name="q" placeholder="Search products..." class="search-input"/>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div class="nav-links">
+            <a href="/products" class="nav-link">Products</a>
+            <a href="/cart" class="nav-link">&#128722; Cart</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top: 2rem;">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="/">Home</a> &rsaquo;
+        <a href="/products">Products</a> &rsaquo;
+        <a th:href="@{/products(category=${product.category})}" th:text="${product.category}">Category</a> &rsaquo;
+        <span th:text="${product.name}">Product</span>
+    </nav>
+
+    <!-- Flash message -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <!-- Product Detail -->
+    <div class="product-detail">
+        <div class="product-detail-image">
+            <div class="product-image-large">
+                <span th:text="${product.name.substring(0,1)}">P</span>
+            </div>
+        </div>
+
+        <div class="product-detail-info">
+            <span class="product-category" th:text="${product.category}">Category</span>
+            <h1 th:text="${product.name}">Product Name</h1>
+            <p class="product-detail-desc" th:text="${product.description}">Description</p>
+
+            <div class="product-detail-price">
+                <span th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">$0.00</span>
+            </div>
+
+            <div th:if="${product.stock > 0}" class="stock-badge in-stock">
+                In Stock (<span th:text="${product.stock}">0</span> available)
+            </div>
+            <div th:unless="${product.stock > 0}" class="stock-badge out-of-stock-badge">
+                Out of Stock
+            </div>
+
+            <form th:if="${product.stock > 0}"
+                  th:action="@{/products/{id}/add-to-cart(id=${product.id})}"
+                  method="post"
+                  class="add-to-cart-form">
+                <div class="quantity-selector">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity"
+                           value="1" min="1" th:max="${product.stock}"
+                           class="quantity-input"/>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
+                <a href="/cart" class="btn btn-outline btn-lg">View Cart</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div th:if="${!relatedProducts.isEmpty()}" class="section" style="margin-top:3rem;">
+        <h2 class="section-title">Related Products</h2>
+        <div class="product-grid">
+            <div th:each="rp : ${relatedProducts}" class="product-card">
+                <div class="product-image-placeholder">
+                    <span th:text="${rp.name.substring(0,1)}">P</span>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">
+                        <a th:href="@{/products/{id}(id=${rp.id})}" th:text="${rp.name}">Name</a>
+                    </h3>
+                    <div class="product-footer">
+                        <span class="product-price" th:text="'$' + ${#numbers.formatDecimal(rp.price, 1, 2)}">$0.00</span>
+                        <a th:href="@{/products/{id}(id=${rp.id})}" class="btn btn-primary btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 ShopEasy. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

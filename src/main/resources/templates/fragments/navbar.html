@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="navbar" class="navbar">
+    <div class="container">
+        <a href="/" class="navbar-brand">ShopEasy</a>
+        <form class="search-form" action="/search" method="get">
+            <input type="text" name="q" placeholder="Search products..." class="search-input"/>
+            <button type="submit" class="btn btn-search">Search</button>
+        </form>
+        <div class="nav-links">
+            <a href="/products" class="nav-link">Products</a>
+            <a href="/cart" class="nav-link cart-link">
+                Cart
+                <span class="cart-badge" th:if="${session.cartService != null}">
+                    <!-- Cart count handled in templates -->
+                </span>
+            </a>
+        </div>
+    </div>
+</nav>
+</body>
+</html>
