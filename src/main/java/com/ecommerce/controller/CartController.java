@@ -18,6 +18,7 @@ public class CartController {
 
     @GetMapping("/cart")
     public String viewCart(Model model) {
+                System.out.println("TestPR-Validation");
         model.addAttribute("cartItems", cartService.getItems());
         model.addAttribute("totalPrice", cartService.getTotalPrice());
         model.addAttribute("totalItems", cartService.getTotalItems());
