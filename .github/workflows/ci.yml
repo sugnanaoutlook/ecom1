@@ -14,34 +14,40 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-          cache-dependency-path: ecommerce/pom.xml
 
       - name: Run tests
         run: mvn test
-        working-directory: ecommerce
 
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           name: test-reports
-          path: ecommerce/target/surefire-reports/
+          path: target/surefire-reports/
+          if-no-files-found: warn
 
       - name: Build JAR
         if: success()
         run: mvn package -DskipTests
-        working-directory: ecommerce
 
       - name: Upload JAR artifact
         if: success()
         uses: actions/upload-artifact@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           name: ecommerce-jar
-          path: ecommerce/target/*.jar
+          path: target/*.jar
