@@ -21,24 +21,27 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+          cache-dependency-path: ecommerce/pom.xml
 
       - name: Run tests
         run: mvn test
+        working-directory: ecommerce
 
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: target/surefire-reports/
+          path: ecommerce/target/surefire-reports/
 
       - name: Build JAR
         if: success()
         run: mvn package -DskipTests
+        working-directory: ecommerce
 
       - name: Upload JAR artifact
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: ecommerce-jar
-          path: target/*.jar
+          path: ecommerce/target/*.jar
