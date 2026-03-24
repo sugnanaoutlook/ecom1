@@ -33,7 +33,6 @@ class CartControllerTest {
     private OrderService orderService;
 
     private Product makeProduct(Long id, String name) {
-        System.out.println("TestPR-Validation")
         return new Product(id, name, "desc", new BigDecimal("49.99"), null, 10, "Electronics");
     }
 
